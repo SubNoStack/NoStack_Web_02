@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css"
+    />
+    <link rel="stylesheet" href="signup.css" />
+    <script
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+      integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 네이버 -->
+    <script
+      type="text/javascript"
+      src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
+      charset="utf-8"
+    ></script>
+    <script
+      type="text/javascript"
+      src="http://code.jquery.com/jquery-1.11.3.min.js"
+    ></script>
+
+    <!-- axios 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>회원가입</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">NOSTACK</div>
+        <nav class="navigation">
+          <div class="nav-links">
+            <div class="nav-link" onclick="location.href='/main-page/main.html'">Home</div>
+            <div class="nav-link" onclick="">서비스 소개</div>
+            <div class="nav-link" id="createWB">문제집 생성</div>
+          </div>
+          <div class="divider"></div>
+          <!--login button 삭제(기존 버튼은 중복 작성한 것이었음)-->
+          <div class="login-text" onclick="location.href='/login/login.html'">로그인</div>
+          <div class="signup" onclick="location.href='/Sign/signup.html'">회원가입</div>
+        </nav>
+      </header>
+      <main class="main">
+        <h1 class="title">회원가입</h1>
+        <p class="description">회원가입을 위해 고객님의 개인정보를 입력해 주세요.</p>
+        <form class="form">
+          <div class="input-field">
+            <label class="input-label">이름</label>
+            <!-- id 추가 -->
+            <input type="text" class="input-name" name="name" />
+          </div>
+          <div class="input-group">
+            <div class="input-field">
+              <label class="input-label">이메일</label>
+              <!-- id 추가 -->
+              <input
+                type="email"
+                placeholder="abc@naver.com"
+                class="input-email"
+                name="email"
+              />
+            </div>
+            <div class="input-field">
+              <label class="input-label-tel">전화번호</label>
+              <input
+                type="tel"
+                placeholder="010-0000-0000"
+                class="input-tel"
+                name="tel"
+              />
+              <button
+                type="button"
+                class="verify-button"
+              >
+                인증
+              </button>
+            </div>
+          </div>
+          <div class="input-field">
+            <label class="input-label">비밀번호</label>
+            <input type="password" placeholder="8-16자, 숫자, 문자, 특수문자를 포함." class="input-pwd" name="password">
+          </div>
+          <div class="input-field">
+            <label class="input-label">비밀번호 확인</label>
+            <input type="password" class="input-pwdcon" name="passwordConfirm">
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="personal" name="personal" unchecked>
+            <label for="personal">개인정보 활용에 동의합니다.</label>
+          </div>
+          <button type="button" class="submit-button">회원가입</button>
+          <div class="login-prompt">
+            <span>이미 계정이 있다면? </span>
+            <span class="login-link" onclick="location.href='/login/login.html'">로그인</span>
+          </div>
+          <div class="divider-container">
+            <span class="or-text">또는 다른 방법으로 로그인</span>
+          </div>
+          <div class="login-btn">
+            <a id="kakao-login-btn" href="javascript:KakaoLogin()">
+              <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="225" alt="카카오 로그인 버튼">
+            </a>
+            <!-- 네이버 소셜 로그인 버튼 생성 -->
+            <a id="naver_id_login"> </a>
+          </div>
+        </form>
+      </main>
+      <div class="no-stack">NO STACK</div>
+    </div>
+    <script src="/config/apikey.js"></script>
+  </body>
+    <script type="text/javascript">
+      const BASE_URL = config.BASE_URL;  // Base URL 변수 설정
+      const naver_apikey = config.naver_apikey;
+      const kakao_apikey = config.kakao_apikey;
+
+      // 네이버 아이디로 로그인 초기화 Script
+      var naver_id_login = new naver_id_login(
+                naver_apikey,
+                'http://localhost:8000/Sign/Signup_completed.html'
+              );
+              var state = naver_id_login.getUniqState();
+              naver_id_login.setButton('green', 3, 54); //네이버 로그인 버튼 설정
+              naver_id_login.setState(state);
+              naver_id_login.init_naver_id_login();
+
+      Kakao.init(kakao_apikey);
+      console.log(Kakao.isInitialized());
+
+      function KakaoLogin() {
+          window.Kakao.Auth.login({
+              scope: "profile_nickname, profile_image, account_email",
+              success: (authObj) => {
+                  console.log("authObj : ");
+                  console.log(authObj);
+
+                  axios.post(`${BASE_URL}/api/auth/kakao-login`, null, {
+                      headers: {
+                          'Authorization': authObj.access_token,                                
+                      },
+                      withCredentials: true
+                  })
+                  .then(response => {
+                      console.log('Server response:', response.data);
+                      
+                      if (response.status === 200) {
+
+                          // 로그인 성공 알림 표시
+                          alert('로그인 성공!');
+
+                          // 응답 데이터를 URL 파라미터로 인코딩하여 전달
+                          const encodedResponse = encodeURIComponent(JSON.stringify(response.data));
+                          console.log('Encoded response:', encodedResponse);
+                          window.location.href = `Signup_completed.html?response=${encodedResponse}`;
+                      } else {
+                          alert('로그인 처리에 문제가 발생했습니다.');
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Login error:', error);
+                      alert('로그인 중 오류가 발생했습니다.');
+                  });
+              },
+              fail: (error) => {
+                  console.error("Kakao login failed:", error);
+                  alert('Kakao 로그인에 실패했습니다.');
+              }
+          });
+      }
+    </script>
+<script src="signup.js"></script>
+<script src="/login/login_api.js"></script>
+</html>
